@@ -40,15 +40,17 @@ class AudioTranscriptionAPI(APIView):
         Transcribes the provided audio file and returns the transcription result in text format.
         """
         audio_file = request.FILES.get('audio_file')
-        api_token = os.getenv('DEEPGRAM_API_TOKEN')
+        if not audio_file:
+            audio_file = request.POST.get('audio_file')
+        api_token = os.environ['DEEPGRAM_API_TOKEN']
 
         if not audio_file:
-            return Response({'message': 'Audio file not provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Audio file or URL not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         audio_transcription = AudioTranscription(api_token)
 
         try:
-            transcription_text = audio_transcription.transcribe(audio_file.read())
+            transcription_text = audio_transcription.transcribe(audio_file)
         except ValueError as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

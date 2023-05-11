@@ -19,7 +19,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/v1/transcribe/', AudioTranscriptionAPI.as_view(), name='transcription'),
+    path('api/v1/transcribe/', include('transcription.urls'), name='transcription'),
     path('api/v1/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('api/v1/docs.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 ]
