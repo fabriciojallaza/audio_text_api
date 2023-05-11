@@ -1,4 +1,4 @@
-# Catalog System REST API
+# Django API for audio-to-text transcription using the Deepgram API
 
 ###### Django API for audio-to-text transcription using the Deepgram API
 
