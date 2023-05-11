@@ -1,9 +1,10 @@
 from django.urls import path
 
 from transcription import views
+from transcription.views import AudioTranscriptionAPI
 
 app_name = 'transcription'
 
 urlpatterns = [
-    path('audio-to-text/', views.audio_to_text, name='audio_to_text'),
+    path('audio-to-text/', AudioTranscriptionAPI.as_view(), name='audio-to-text'),
 ]
