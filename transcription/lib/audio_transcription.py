@@ -3,6 +3,8 @@ import mimetypes
 import requests
 import json
 
+from transcription.models import File, Transcription
+
 
 class AudioTranscription:
     """
@@ -22,6 +24,16 @@ class AudioTranscription:
 
         response = self._send_request(headers, data)
         transcription_text = self._handle_response(response)
+
+        #store transcription_text in database
+        file_storage = self._file_storage(audio_file)
+        transcription_storage = self._transcription_storage(transcription_text, file_storage)
+
+        #verify if transcription_text is an object
+        if isinstance(transcription_text, object):
+            pass
+        else:
+            raise ValueError('Transcription request failed, transcription was not stored in database')
 
         return transcription_text
 
@@ -58,3 +70,17 @@ class AudioTranscription:
             raise ValueError('Invalid Deepgram API token')
         else:
             raise ValueError('Transcription failed')
+
+    def _file_storage(self, audio_file):
+        file = File()
+        file.file = audio_file
+        file.name = audio_file if isinstance(audio_file, str) else audio_file.name
+        file.save()
+        return file
+
+    def _transcription_storage(self, transcription_text, file_storage):
+        transcription = Transcription()
+        transcription.text = transcription_text
+        transcription.file = file_storage
+        transcription.save()
+        return transcription
