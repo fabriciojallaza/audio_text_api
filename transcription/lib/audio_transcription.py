@@ -13,7 +13,7 @@ class AudioTranscription:
 
     def __init__(self, api_token):
         self.url = 'https://api.deepgram.com/v1/listen'
-        self.api_token = api_token  # 6d054a01594671758512f2959832c4863ff8d2b5
+        self.api_token = api_token
 
     def transcribe(self, audio_file):
         """

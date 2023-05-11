@@ -62,6 +62,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ~~~
 
+### Save DEEPGRAM_API_KEY in environment variable
+To save the DEEPGRAM_API_KEY in an environment variable, you can use the following command in a Unix-based terminal:
+
+~~~bash 
+export DEEPGRAM_API_KEY=your_api_key_here
+~~~
+Make sure to replace your_api_key_here with your actual API key.
+
+Alternatively, you can add this line to your shell startup script (e.g. ~/.bashrc) to automatically set the environment variable every time you open a new terminal session.
+
 
 #### To Run Tests
 
