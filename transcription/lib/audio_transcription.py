@@ -2,7 +2,6 @@ import mimetypes
 
 import requests
 import json
-import os
 
 
 class AudioTranscription:

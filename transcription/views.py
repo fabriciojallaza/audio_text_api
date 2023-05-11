@@ -1,10 +1,9 @@
 import os
 
-from django.http import FileResponse
 from drf_yasg.openapi import Schema, TYPE_FILE
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import APIView, parser_classes
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -19,7 +18,8 @@ class AudioTranscriptionAPI(APIView):
     @swagger_auto_schema(
         request_body=Schema(
             type=TYPE_FILE,
-            description="Audio file in .wav or .mp3 format"
+            description="Audio file in any format or URL of audio file"
+
         ),
         responses={
             200: Schema(
@@ -34,7 +34,7 @@ class AudioTranscriptionAPI(APIView):
             400: "Bad Request"
         }
     )
-    @parser_classes([MultiPartParser])
+    @parser_classes([FileUploadParser])
     def post(self, request, format=None):
         """
         Transcribes the provided audio file and returns the transcription result in text format.
