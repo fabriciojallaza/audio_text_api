@@ -72,6 +72,10 @@ Make sure to replace your_api_key_here with your actual API key.
 
 Alternatively, you can add this line to your shell startup script (e.g. ~/.bashrc) to automatically set the environment variable every time you open a new terminal session.
 
+### Run migrations
+~~~bash
+python manage.py migrate
+~~~
 
 #### To Run Tests
 
