@@ -1,3 +1,5 @@
+import mimetypes
+
 import requests
 import json
 import os
@@ -16,22 +18,30 @@ class AudioTranscription:
         """
         Transcribes an audio file using the Deepgram API.
         """
-        headers = self._set_headers()
-        data = self._set_data(audio_file)
+        data, mime_type = self._set_data(audio_file)
+        headers = self._set_headers(mime_type)
 
         response = self._send_request(headers, data)
         transcription_text = self._handle_response(response)
 
         return transcription_text
 
-    def _set_headers(self):
+    def _set_headers(self, mime_type):
         if not self.api_token:
             raise ValueError('Deepgram API token is missing')
         return {'Authorization': f'Token {self.api_token}',
-                'content-type': 'application/json'}
+                'Content-Type': mime_type}
 
     def _set_data(self, audio_file):
-        return {'audio': audio_file}
+        # differentiate from file upload or url
+        if isinstance(audio_file, str):
+            # call set_headers
+            mime_type = 'application/json'
+            return json.dumps({"url": audio_file}), mime_type
+        else:
+            # change content-type header and detect MIME type
+            mime_type = mimetypes.guess_type(audio_file.name)[0]
+            return audio_file.read(), mime_type
 
     def _send_request(self, headers, data):
         try:
@@ -43,7 +53,7 @@ class AudioTranscription:
     def _handle_response(self, response):
         if response.status_code == 200:
             response_data = json.loads(response.content)
-            transcription_text = response_data['results']['channel_0'][0]['text']
+            transcription_text = response_data['results']['channels'][0]['alternatives'][0]['transcript']
             return transcription_text
         elif response.status_code == 401:
             raise ValueError('Invalid Deepgram API token')
